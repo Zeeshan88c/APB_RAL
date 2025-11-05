@@ -1,0 +1,51 @@
+//==================================================
+// File: reg_prac.rdl
+// Author: Muhammad Zeeshan Malik
+// Description: Example RDL defining 4 registers inside a block
+//==================================================
+
+//===========================
+// Define register block first
+//===========================
+addrmap reg_block_prac {
+    name = "Practice CSR Block";
+    desc = "Contains four sample registers";
+
+    reg {
+        name = "Control Register";
+        field { name = "enable"; sw = rw; hw = rw; } enable[0:0];
+        field { name = "mode"; sw = rw; hw = rw; } mode[2:1];
+        field { name = "rsvd"; sw = r; hw = r; } rsvd[31:3];
+    } ctrl @0x00;
+
+    reg {
+        name = "Status Register";
+        field { name = "ready"; sw = r; hw = rw; } ready[0:0];
+        field { name = "error"; sw = r; hw = rw; } error[1:1];
+        field { name = "rsvd"; sw = r; hw = r; } rsvd[31:2];
+    } status @0x04;
+
+    reg {
+        name = "Configuration Register";
+        field { name = "cfg0"; sw = rw; hw = rw; } cfg0[7:0];
+        field { name = "cfg1"; sw = rw; hw = rw; } cfg1[15:8];
+        field { name = "rsvd"; sw = r; hw = r; } rsvd[31:16];
+    } config @0x08;
+
+    reg {
+        name = "Data Register";
+        field { name = "data"; sw = rw; hw = rw; } data[31:0];
+    } data @0x0C;
+};
+
+
+//===========================
+// Now instantiate it inside top addrmap
+//===========================
+addrmap my_block {
+    name = "Register block";
+    desc = "The top block for registers";
+    default accesswidth = 32;
+
+    reg_block_prac csr_prac @0x0000_0000;
+};
